@@ -1,0 +1,54 @@
+<div class="console">
+  <div class="line white status">Welcome to websocket terminal. Connecting...</div>
+</div>
+<div class="bottom">
+  <div class="label">></div>
+  <div id="input"></div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  var $status = $('.status');
+  var socket = new Phoenix.Socket("ws://" + location.host + "/ws");
+  socket.join("shell", {}, function(chan){
+    chan.on("join", function(message) {
+      $status.text("Welcome to websocket terminal. Connected");
+    });
+
+    $('#input').cssConsole({
+      inputName:'console',
+      charLimit: 60,
+      onEnter: function(){
+        addLine("> "+$('#input').find('input').val());
+        chan.send("shell:stdin", {data:$('#input').find('input').val()});
+        $('#input').cssConsole('reset');	
+      }
+    });
+
+    chan.on("stdout", function(message) {
+      _.each(atob(message.data).split(/(?:\r\n|\r|\n)/g), function(item) {
+        addLine(item, 'margin', 'blue')
+      });
+    });
+  });
+
+  var lineLimit = 28;
+  var focus;
+
+  focus = window.setInterval(function() {
+    if(!$('#input').find('input').is(":focus")){
+      $('#input').find('input').focus();
+    }
+  }, 100);
+
+  function addLine(input, style, color) {
+    if($('.console div').length==lineLimit) {
+      $('.console div').eq(0).remove();
+    }
+    style = typeof style !== 'undefined' ? style : 'line';
+    color = typeof color !== 'undefined' ? color : 'white';
+    $('.console').append('<div class="'+style+' '+color+'">'+input+'</div>');
+  }
+
+});
+</script>

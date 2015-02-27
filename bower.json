@@ -1,0 +1,22 @@
+{
+  "name": "websockets_terminal",
+  "version": "0.0.1",
+  "description": "websockets terminal example",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "priv/static/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "cssConsole": "michalkow/cssConsole",
+    "underscore": "jashkenas/underscore#~1.8.2"
+  }
+}
